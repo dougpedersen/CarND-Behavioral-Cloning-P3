@@ -10,9 +10,9 @@ import csv
 import random
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 import sklearn
 from sklearn.model_selection import train_test_split
-#import keras
 from keras.models import Sequential, load_model
 from keras.layers import Flatten, Dense, Lambda, ELU, Dropout
 from keras.layers.convolutional import Convolution2D, Cropping2D
@@ -35,6 +35,12 @@ with open('driving_log_bridge.csv') as csvfile:
 
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
+def read_image(file_loc):
+    img = cv2.imread(file_loc)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
+    return img
+    
+""" Data generator - use to load training data as needed to reduce RAM usage """
 def generator(samples, batch_size=25):  
     num_samples = len(samples)
     print("num_samples = %d " % num_samples)
@@ -48,15 +54,23 @@ def generator(samples, batch_size=25):
                 name = '../IMG/'+batch_sample[0].split('/')[-1]
                 # print(batch_sample[3])
                 if os.path.isfile(name):
-                    center_image = cv2.imread(name)
+                    # center_image = cv2.imread(name)
+                    center_image = read_image(name)
                 else:
+                    # flag something if image not found
                     print(name)
 
                 center_angle = float(batch_sample[3])
                 images.append(center_image)
                 angles.append(center_angle)
 
-            # trim image to only see section with road
+            #augmented_images = []
+            #augmented_angles = []
+            #for (image, angle) in zip(images, angles):
+                
+            
+            #X_train = np.array(augmented_images)
+            #y_train = np.array(augmented_angles)
             X_train = np.array(images)
             y_train = np.array(angles)
             yield sklearn.utils.shuffle(X_train, y_train)
@@ -93,13 +107,14 @@ model.compile(loss='mse', optimizer='adam')
 #model = load_model("model.h5")
 
 # train the model
-model.fit_generator(train_generator, 
-                    samples_per_epoch = len(train_samples), 
+history = model.fit_generator(train_generator, 
+                    samples_per_epoch = 1450, #len(train_samples), 
                     validation_data=validation_generator, 
                     nb_val_samples=len(validation_samples), 
-                    nb_epoch= 3 )  # 3
+                    nb_epoch= 6 )  # 3
 
 model.save("model.h5")
 
-
-
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.show()
