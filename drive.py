@@ -8,6 +8,7 @@ import os
 import shutil
 
 import numpy as np
+import cv2
 import socketio
 import eventlet
 import eventlet.wsgi
@@ -63,9 +64,12 @@ def telemetry(sid, data):
         # The current image from the center camera of the car
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
-        image_array = np.asarray(image)
+        # The keras model trained in YUV space, so convert to that for the model
+        image_array = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2YUV)
+        # Note, keras was internally clipping video, so don't need to pre-process here
+        # Get the desired steering input
         steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
-
+        # Run the desired through a PI filter.
         throttle = controller.update(float(speed))
 
         print(steering_angle, throttle)
