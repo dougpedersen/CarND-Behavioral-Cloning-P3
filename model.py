@@ -26,10 +26,16 @@ with open('driving_log.csv') as csvfile:
         # Don't store header:
         if line[0] != "center":
             samples.append(line)
+with open('driving_log_bridge.csv') as csvfile:
+    reader = csv.reader(csvfile)
+    for line in reader:
+        # Don't store header:
+        if line[0] != "center":
+            samples.append(line)
 
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
-def generator(samples, batch_size=50):  
+def generator(samples, batch_size=25):  
     num_samples = len(samples)
     print("num_samples = %d " % num_samples)
     while 1: # Loop forever so the generator never terminates
@@ -56,8 +62,8 @@ def generator(samples, batch_size=50):
             yield sklearn.utils.shuffle(X_train, y_train)
 
 # compile and train the model using the generator function
-train_generator = generator(train_samples, batch_size=50)
-validation_generator = generator(validation_samples, batch_size=50)
+train_generator = generator(train_samples, batch_size=25)
+validation_generator = generator(validation_samples, batch_size=25)
 
 ch, row, col = 3, 160, 320  # Trimmed image format
 
