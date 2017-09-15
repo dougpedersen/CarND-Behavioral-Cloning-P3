@@ -16,7 +16,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
+[image1]: ./examples/cnn-architecture-624x890.png "NVIDIA Model Visualization"
 [image2]: ./examples/placeholder.png "Grayscaling"
 [image3]: ./examples/placeholder_small.png "Recovery Image"
 [image4]: ./examples/placeholder_small.png "Recovery Image"
@@ -41,7 +41,7 @@ My project includes the following files:
 * drive.py for driving the car in autonomous mode
 * model.h5 containing a trained convolution neural network 
 * writeup_report.md summarizing the results
-* [track1 completed drive video - youtube] (https://youtu.be/z1InxiElLCQ)
+* [track1 completed drive video - youtube](https://youtu.be/z1InxiElLCQ "track1 completed drive video - youtube") 
 
 ####2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track by executing 
@@ -92,9 +92,6 @@ In order to gauge how well the model was working, I split the Udacity sample ima
 
 To attempt to fix this, I added my own data with many passes though these points at various sides of the road. This resulted in the car crashing sooner on the track.  I then added the left and right camera images and set the angle correction to +/-.09 (worked better than 0.05 and 0.15).  Performance still wasn't good on turns, so I flipped all the training data to double the training and have more turn variations.   
 
-
-Then I ... 
-
 The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
@@ -103,9 +100,9 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
 
-TODO: keras export pic 
-
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
+Here is a visualization of the architecture from  [the original source](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars) The implemented model differed in that the input plane was 160-95 x 320, instead of 66 x 200.
+I was not able to get the Tensorboard or keras graph visualization working to show the implemented model.
+(note: visualizing the architecture is optional according to the project rubric)  
 
 ![alt text][image1]
 
